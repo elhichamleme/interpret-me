@@ -25,7 +25,6 @@ public class InterpreterControllerTest extends AbstractTest {
         String uri = "/interpreter/execute";
         Map<String, String> entries = new HashMap<>();
         entries.put("code", "%python print 1+1");
-        entries.put("sessionId", "1234");
         String inputJson = super.mapToJson(entries);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -37,10 +36,10 @@ public class InterpreterControllerTest extends AbstractTest {
 
         Assert.assertEquals(2, results.size());
         Assert.assertTrue(results.containsKey("result"));
-        Assert.assertEquals("%python print 1+1", results.get("result"));
+        Assert.assertEquals("2", results.get("result"));
 
         Assert.assertTrue(results.containsKey("sessionId"));
-        Assert.assertEquals("1234", results.get("sessionId"));
+        Assert.assertNotEquals("", results.get("sessionId"));
 
 
     }

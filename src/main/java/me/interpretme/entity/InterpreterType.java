@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface InterpreterType {
-     String command();
-     String[] arguments() default "";
+    public String command();
+    public String[] arguments() default "";
 }
