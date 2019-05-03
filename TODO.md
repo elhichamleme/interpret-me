@@ -1,8 +1,8 @@
 # TODO
 ## Features
 - [x] init spring boot 1.5.x project
-- [ ] build /execute endpoint that accept json and return json
-- [ ] add support to variable and state
+- [x] build /execute endpoint that accept json and return json
+- [x] add support to variable and state
 - [ ] add support to sessions via sessionId parameter
 - [ ] write and perform unit and integration tests
 ## Exceptions handling

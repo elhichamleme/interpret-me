@@ -42,7 +42,9 @@ public class PythonInterpreter extends Interpreter {
 
             while (!(line = stdout.readLine() ).equals("**MARKER**"))
             {
-                result = result.append(line).append(System.lineSeparator());
+                if(!result.toString().equals(""))
+                    result = result.append(System.lineSeparator());
+                result = result.append(line);
             }
             return result.toString();
 

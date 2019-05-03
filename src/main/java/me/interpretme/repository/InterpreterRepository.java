@@ -5,6 +5,7 @@ import me.interpretme.exception.InterpreterNotFoundException;
 
 public interface InterpreterRepository {
 
-    Interpreter findByInterpreterTypeAndSessionId(String interpreterType, String sessionId)
+    Interpreter findInterpreterBySessionId(String sessionId)
             throws InterpreterNotFoundException;
+    void persistInterpreter(Interpreter interpreter);
 }

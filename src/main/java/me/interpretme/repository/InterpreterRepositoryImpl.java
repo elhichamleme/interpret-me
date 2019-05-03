@@ -4,27 +4,30 @@ import me.interpretme.entity.Interpreter;
 import me.interpretme.exception.InterpreterNotFoundException;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 
 @Repository
 public class InterpreterRepositoryImpl implements InterpreterRepository {
 
-    private Map<String, Map<String, Interpreter>> interpreters;
+    private Map<String, Interpreter> interpreters = new HashMap<>();
 
     @Override
-    public Interpreter findByInterpreterTypeAndSessionId(String interpreterType, String sessionId)
+    public Interpreter findInterpreterBySessionId(String sessionId)
     throws InterpreterNotFoundException{
-        Map<String, Interpreter> interpretersByType = interpreters.get(interpreterType);
-        if(interpretersByType == null)
-            throw new InterpreterNotFoundException();
-        else
-        {
-            Interpreter interpreter = interpretersByType.get(sessionId);
+
+            Interpreter interpreter = interpreters.get(sessionId);
             if(interpreter == null)
                 throw new InterpreterNotFoundException();
             else return interpreter;
-        }
 
 
+
+    }
+
+    @Override
+    public void persistInterpreter(@NotNull  Interpreter interpreter) {
+        interpreters.put(interpreter.getProcess().hashCode()+"", interpreter);
     }
 }

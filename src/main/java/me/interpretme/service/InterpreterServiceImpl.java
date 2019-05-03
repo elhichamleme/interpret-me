@@ -20,21 +20,32 @@ public class InterpreterServiceImpl implements InterpreterService  {
     @Override
     public Interpreter getInterpreter(String interpreterType, String sessionId)
             throws InterpreterNotFoundException, InterpreterNotInstantiatiedException {
+        System.out.println("interpreterType : " + interpreterType);
+        System.out.println("sessionId : "+sessionId );
+
 
         Optional<Class<?>> interpreterClass = getInterpreterClass(interpreterType);
-        if (!interpreterClass.isPresent())
+        if (!interpreterClass.isPresent()) {
+            System.out.println(interpreterClass.isPresent());
             throw new InterpreterNotFoundException();
+
+        }
         else {
+            Interpreter interpreter;
 
             if (sessionId == null) {
                 try {
-                    return (Interpreter) interpreterClass.get().newInstance();
+                    interpreter = (Interpreter) interpreterClass.get().newInstance();
+                    interpreterRepository.persistInterpreter(interpreter);
+
                 } catch (InstantiationException | IllegalAccessException ex) {
                     throw new InterpreterNotInstantiatiedException();
                 }
             } else {
-                return interpreterRepository.findByInterpreterTypeAndSessionId(interpreterType, sessionId);
+                interpreter = interpreterRepository.findInterpreterBySessionId(sessionId);
             }
+
+            return interpreter;
 
 
         }
@@ -42,15 +53,18 @@ public class InterpreterServiceImpl implements InterpreterService  {
 
 
 
-    public Optional<Class<?>> getInterpreterClass(String interpreterType)
+    private Optional<Class<?>> getInterpreterClass(String interpreterType)
     {
-        Reflections reflections = new Reflections();
+        Reflections reflections = new Reflections("me.interpretme");
         Set<Class<?>> interpreterTypes = reflections.getTypesAnnotatedWith(InterpreterType.class);
+        System.out.println(interpreterTypes.size());
 
         Optional<Class<?>> interpreterClass = interpreterTypes.stream().filter(clazz-> {
 
-                    return clazz.getAnnotation(InterpreterType.class).command() .equals(interpreterType) &&
-                            Interpreter.class.isAssignableFrom(clazz);
+            System.out.println(clazz.getAnnotation(InterpreterType.class).command());
+                    return clazz.getAnnotation(InterpreterType.class).command() .equals(interpreterType) ;
+
+                          //  && Interpreter.class.isAssignableFrom(clazz);
                 }
 
         ).findFirst();
