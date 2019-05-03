@@ -1,7 +1,9 @@
 package me.interpretme.entity;
 
 import me.interpretme.exception.InstructionNotExecutedException;
+import me.interpretme.exception.InstructionThrowedErrorException;
 import me.interpretme.exception.InterpreterNotInstantiatiedException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.*;
 
@@ -14,8 +16,8 @@ public class PythonInterpreter extends Interpreter {
 
     public PythonInterpreter() throws InterpreterNotInstantiatiedException {
 
-        ProcessBuilder processBuilder = new ProcessBuilder();
         try {
+            ProcessBuilder processBuilder = new ProcessBuilder();
             this.process =processBuilder.command("python", "-u", "-i").start();
             this.stdout = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
             this.stdin = new BufferedWriter(new OutputStreamWriter(this.process.getOutputStream()));
@@ -29,16 +31,34 @@ public class PythonInterpreter extends Interpreter {
     }
 
     @Override
-    public String execute(String instruction) throws InstructionNotExecutedException {
-        try{
+    public String execute(String instruction) throws InstructionNotExecutedException,
+            InstructionThrowedErrorException {
 
+        try{
         stdin.write(instruction + System.lineSeparator());
         stdin.write("print '**MARKER**'"+ System.lineSeparator());
-        //   stdin.write(instruction);
         stdin.flush();
+        // Not Implemented yet method
+        // processError();
+        return  processOutput();
 
-        String line;
-        StringBuilder result = new StringBuilder();
+        }catch(IOException ex){
+
+            throw new InstructionNotExecutedException();
+        }
+
+
+    }
+
+    private void processError()
+    {
+        throw new NotImplementedException();
+
+    }
+    private String processOutput() throws InstructionNotExecutedException{
+        try{
+            String line;
+            StringBuilder result = new StringBuilder();
 
             while (!(line = stdout.readLine() ).equals("**MARKER**"))
             {
@@ -52,8 +72,5 @@ public class PythonInterpreter extends Interpreter {
 
             throw new InstructionNotExecutedException();
         }
-
-
-
     }
 }

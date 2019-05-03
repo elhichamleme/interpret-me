@@ -2,6 +2,7 @@ package me.interpretme.controller;
 
 import me.interpretme.Main;
 import me.interpretme.exception.CodeCannotBeParsedException;
+import me.interpretme.exception.InstructionThrowedErrorException;
 import me.interpretme.exception.InterpreterNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +34,19 @@ public class ExceptionHandlerController {
 
         Map<String, String> result =new HashMap<>();
         result.put("error", "code cannot be parsed");
+        return result;
+
+    }
+
+    @ExceptionHandler( InstructionThrowedErrorException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+
+    public Map<String, String> intructionThrowedException(Exception ex, WebRequest req) {
+
+        InstructionThrowedErrorException exception = (InstructionThrowedErrorException) ex;
+
+        Map<String, String> result =new HashMap<>();
+        result.put("error", String.format("Instruction throwed the error :%s",exception.getError()));
         return result;
 
     }

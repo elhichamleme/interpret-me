@@ -1,10 +1,7 @@
 package me.interpretme.controller;
 
 import me.interpretme.entity.Interpreter;
-import me.interpretme.exception.CodeCannotBeParsedException;
-import me.interpretme.exception.InstructionNotExecutedException;
-import me.interpretme.exception.InterpreterNotFoundException;
-import me.interpretme.exception.InterpreterNotInstantiatiedException;
+import me.interpretme.exception.*;
 import me.interpretme.service.InterpreterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +22,8 @@ public class InterpreterController {
     @PostMapping("/execute")
     public Map<String, String> execute(@RequestBody Map<String, String> entries)
             throws InterpreterNotInstantiatiedException, InterpreterNotFoundException,
-            InstructionNotExecutedException, CodeCannotBeParsedException
+            InstructionNotExecutedException, CodeCannotBeParsedException,
+            InstructionThrowedErrorException
     {
         String code = entries.get("code");
         String sessionId = entries.get("sessionId");
