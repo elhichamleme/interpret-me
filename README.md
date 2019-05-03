@@ -59,6 +59,13 @@ hit the url localhost:8060/interpreter/execute and send a Post Request with a bo
 	"code": "%python print 1+1"
 }
 ```
+if the port 8060 is already used you can change it in the application.properties to another available one
+
+to execute integration tests run
+
+```
+mvn clean test
+```
 ### Prerequisites
 
 Python 2 or 3 installed
