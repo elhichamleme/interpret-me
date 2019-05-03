@@ -14,7 +14,7 @@ public class InterpreterRepositoryImpl implements InterpreterRepository {
     private Map<String, Interpreter> interpreters = new HashMap<>();
 
     @Override
-    public Interpreter findInterpreterBySessionId(String sessionId)
+    public Interpreter findInterpreterBySessionId(@NotNull String sessionId)
     throws InterpreterNotFoundException{
 
             Interpreter interpreter = interpreters.get(sessionId);

@@ -1,6 +1,7 @@
 package me.interpretme.controller;
 
 import me.interpretme.entity.Interpreter;
+import me.interpretme.exception.CodeCannotBeParsedException;
 import me.interpretme.exception.InstructionNotExecutedException;
 import me.interpretme.exception.InterpreterNotFoundException;
 import me.interpretme.exception.InterpreterNotInstantiatiedException;
@@ -24,11 +25,13 @@ public class InterpreterController {
     @PostMapping("/execute")
     public Map<String, String> execute(@RequestBody Map<String, String> entries)
             throws InterpreterNotInstantiatiedException, InterpreterNotFoundException,
-            InstructionNotExecutedException
+            InstructionNotExecutedException, CodeCannotBeParsedException
     {
         String code = entries.get("code");
         String sessionId = entries.get("sessionId");
-        System.out.println(sessionId);
+
+        if(!validateCode(code))
+            throw new CodeCannotBeParsedException();
 
         String[] tokens = tokenize(code);
         String interpreterType = tokens[0];
@@ -43,7 +46,7 @@ public class InterpreterController {
     }
 
     String[] tokenize(String code){
-
+        code = code.trim();
         String interpreter = code.substring(1, code.indexOf(" "));
         String instruction =  code.substring(code.indexOf(" ")+1, code.length());
 
@@ -51,6 +54,11 @@ public class InterpreterController {
 
         String[] tokens = {interpreter, instruction};
         return  tokens;
+    }
+
+    boolean validateCode(String code){
+        code = code.trim();
+        return code.length() > 3 & code.charAt(0) == '%' & code.contains(" ");
     }
 
 

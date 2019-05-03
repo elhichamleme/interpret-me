@@ -111,4 +111,27 @@ public class InterpreterControllerTest extends AbstractTest {
 
 
     }
+
+    @Test
+    public void executeUnparseableCode() throws Exception
+    {
+        String uri = "/interpreter/execute";
+        Map<String, String> entries = new HashMap<>();
+        entries.put("code", "$python print 1+1");
+        String inputJson = super.mapToJson(entries);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson)).andReturn();
+        int statusCode = mvcResult.getResponse().getStatus();
+        Assert.assertEquals(500, statusCode);
+        String outputJson = mvcResult.getResponse().getContentAsString();
+        Map<String, String > results = super.mapFromJson(outputJson, Map.class);
+
+        Assert.assertEquals(1, results.size());
+        Assert.assertTrue(results.containsKey("error"));
+        System.out.println(results.get("result"));
+        Assert.assertEquals("code cannot be parsed", results.get("error"));
+
+
+    }
 }
